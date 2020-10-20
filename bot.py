@@ -38,7 +38,13 @@ class CustomClient(discord.Client):
                     else:
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
-
+                #with open("userCombinations.txt", "a") as userCombFile:
+                    #userCombFile.write(combination[0])
+                    #userCombFile.write("\t")
+                #with open("userCombinations.txt", "a") as userCombFile:
+                    #userCombFile.write("{}\n".format(combination[0]))
+                    #userCombFile.write(combination[0])
+                    #userCombFile.write("\n")
 
 
 client = CustomClient()
