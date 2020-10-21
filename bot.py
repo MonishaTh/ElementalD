@@ -9,6 +9,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 PREFIX = "!" #TODO: Make this not hard-coded.
 
+
 class CustomClient(discord.Client):
     async def on_ready(self):
         print(f'{client.user} has connected to Discord!')
@@ -38,13 +39,22 @@ class CustomClient(discord.Client):
                     else:
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
-                #with open("userCombinations.txt", "a") as userCombFile:
+                with open("userCombinations.txt", "a") as userCombFile:
+                    userCombFile.write("{}\n".format(combination[0]))
+
+                #with open("userCombinations.txt", "w") as userCombFile:
                     #userCombFile.write(combination[0])
-                    #userCombFile.write("\t")
-                #with open("userCombinations.txt", "a") as userCombFile:
-                    #userCombFile.write("{}\n".format(combination[0]))
-                    #userCombFile.write(combination[0])
-                    #userCombFile.write("\n")
+                #else:               
+                 #   with open("userCombinations.txt", "r+") as userCombFile:
+                  #      for line in userCombFile:
+                   #         if combination[0] in line:
+                    #            await channel.send("Element already created.")
+                     #           break
+                      #  userCombFile.seek(0, 2)
+                       # userCombFile.write("{}\n".format(combination[0]))
+                            
+                    
+
 
 
 client = CustomClient()
