@@ -34,28 +34,20 @@ class CustomClient(discord.Client):
                         #print(combination)
                         if(combination[1]==args[1] and combination[2]==args[2]):
                             print("user "+str(message.author)+" successfully combined "+combination[1]+" with "+combination[2]+" to get "+combination[0])
-                            await channel.send(combination[1]+"+"+combination[2]+"="+combination[0])
+                            with open("userCombinations.txt", "a+") as userCombFile:
+                                userCombFile.seek(0)
+                                for element in userCombFile.readlines():
+                                    if element.strip("\n") == combination[0]:
+                                        await channel.send("Element already created.")
+                                        break
+                                else:
+                                    await channel.send(combination[1]+"+"+combination[2]+"="+combination[0])
+                                    userCombFile.write("{}\n".format(combination[0]))
                             break
                     else:
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
-                with open("userCombinations.txt", "a") as userCombFile:
-                    userCombFile.write("{}\n".format(combination[0]))
-
-                #with open("userCombinations.txt", "w") as userCombFile:
-                    #userCombFile.write(combination[0])
-                #else:               
-                 #   with open("userCombinations.txt", "r+") as userCombFile:
-                  #      for line in userCombFile:
-                   #         if combination[0] in line:
-                    #            await channel.send("Element already created.")
-                     #           break
-                      #  userCombFile.seek(0, 2)
-                       # userCombFile.write("{}\n".format(combination[0]))
-                            
-                    
-
-
+                        
 
 client = CustomClient()
 client.run(TOKEN)
