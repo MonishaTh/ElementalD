@@ -47,6 +47,13 @@ class CustomClient(discord.Client):
                     else:
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
+    #async def ModRemoveItem(self,member):
+   # content=message.content
+        #if(content.startswith(PREFIX)):
+         #   args=content.split(" ")
+              #command=args[0][len(PREFIX):]
+                  #if(command == "remove"):
+                     # with open("combinations.csv","w") as cominationsFile:
                         
 
 client = CustomClient()
