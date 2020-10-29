@@ -48,20 +48,21 @@ class CustomClient(discord.Client):
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
   
-#async def ModRemoveItem(self,member):
-  #  if self.message.author.server_permissions.administrator:
-           # content=message.content
-        #if(content.startswith(PREFIX)):
-         #   args=content.split(" ")
-              #command=args[0][len(PREFIX):]
-                  #if(command == "remove"):
-                     # with open("combinations.csv","w") as cominationsFile:
-                    #combinationWriter=csv.writer(cominationsFile)
-                    #for combination in combinationWriter
-                       #if(combination[1]==args[1] and combination[2]==args[2]):      
-      #  else:
-       # msg = "You're  not a admin and dont have permission {0.author.mention}".format(self.message)  #ctx 
-        # await client.send_message(self.message.channel, msg)
+async def ModRemoveItem(self,ctx):
+     if ctx.message.author.server_permissions.administrator:
+            content=message.content
+        if(content.startswith(PREFIX)):
+            args=content.split(" ")
+              command=args[0][len(PREFIX):] #removes prefix
+                  if(command == "remove"):
+                     with open("combinations.csv","w") as cominationsFile:
+                    combinationWriter=csv.writer(cominationsFile)
+                    for combination in combinationWriter #loop through
+                       if(combination[1]==args[1] and combination[2]==args[2]): 
+                            
+       else:
+        msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
+         await client.send_message(ctx.message.channel, msg)
     
                         
 
