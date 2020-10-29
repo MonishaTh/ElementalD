@@ -52,32 +52,32 @@ class CustomClient(discord.Client):
                         await channel.send("Invalid combination")
   
 #check if code works 
-async def ModRemoveItem(self,ctx):
-     if ctx.message.author.server_permissions.administrator:
-        content=message.content
-        if(content.startswith(PREFIX)):
-            args=content.split(" ")
-            command=args[0][len(PREFIX):] #removes prefix
-            if(command == "remove"):
-                filename="combinations.csv"
-                temp_file=NamedTemporaryfile(delete=False)
-                with open(filename,"rb") as csvfile, temp_file:
-                    reader=csv.DictReader(csvfile)
-                    writer=csv.DictWriter(temp_file)
-                    for row in reader:
-                        if(combination[1]==args[1] and combination[2]==args[2]):
-                            next(row) #skip line 
-                        else writer.writerow(row)
+# async def ModRemoveItem(self,ctx):
+     # if ctx.message.author.server_permissions.administrator:
+        # content=message.content
+        # if(content.startswith(PREFIX)):
+            # args=content.split(" ")
+            # command=args[0][len(PREFIX):] #removes prefix
+            # if(command == "remove"):
+                # filename="combinations.csv"
+                # temp_file=NamedTemporaryfile(delete=False)
+                # with open(filename,"rb") as csvfile, temp_file:
+                    # reader=csv.DictReader(csvfile)
+                    # writer=csv.DictWriter(temp_file)
+                    # for row in reader:
+                        # if(combination[1]==args[1] and combination[2]==args[2]):
+                            # next(row) #skip line 
+                        # else writer.writerow(row)
                               
                               
-            shutile.move(temp_file.name,filename) #move new file with deleted combination to combinations.csv file
-             return true                 
-           return false    
+            # shutile.move(temp_file.name,filename) #move new file with deleted combination to combinations.csv file
+             # return true                 
+           # return false    
                                      
-      else:
-        msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
-         await client.send_message(ctx.message.channel, msg)
-         return true
+      # else:
+        # msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
+         # await client.send_message(ctx.message.channel, msg)
+         # return true
     
                         
 
