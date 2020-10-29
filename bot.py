@@ -54,20 +54,20 @@ class CustomClient(discord.Client):
 #check if code works 
 async def ModRemoveItem(self,ctx):
      if ctx.message.author.server_permissions.administrator:
-            content=message.content
+        content=message.content
         if(content.startswith(PREFIX)):
             args=content.split(" ")
-              command=args[0][len(PREFIX):] #removes prefix
-                  if(command == "remove"):
-                    filename="combinations.csv"
-                    temp_file=NamedTemporaryfile(delete=False)
-                    with open(filename,"rb" as csvfile,temp_file:
-                              reader=csv.DictReader(csvfile)
-                              writer=csv.DictWriter(temp_file)
-                   for row in reader:
-                              if(combination[1]==args[1] and combination[2]==args[2]):
-                               next(row) #skip line 
-                              else writer.writerow(row)
+            command=args[0][len(PREFIX):] #removes prefix
+            if(command == "remove"):
+                filename="combinations.csv"
+                temp_file=NamedTemporaryfile(delete=False)
+                with open(filename,"rb") as csvfile, temp_file:
+                    reader=csv.DictReader(csvfile)
+                    writer=csv.DictWriter(temp_file)
+                    for row in reader:
+                        if(combination[1]==args[1] and combination[2]==args[2]):
+                            next(row) #skip line 
+                        else writer.writerow(row)
                               
                               
             shutile.move(temp_file.name,filename) #move new file with deleted combination to combinations.csv file
