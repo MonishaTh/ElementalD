@@ -1,6 +1,9 @@
 # bot.py
 import os, csv
 
+import shutil
+from tempfile import NamedTemporaryFile
+
 import discord
 from dotenv import load_dotenv
 
@@ -48,6 +51,7 @@ class CustomClient(discord.Client):
                         print("user "+str(message.author)+" made an invalid combination")    
                         await channel.send("Invalid combination")
   
+#check if code works 
 async def ModRemoveItem(self,ctx):
      if ctx.message.author.server_permissions.administrator:
             content=message.content
@@ -55,14 +59,25 @@ async def ModRemoveItem(self,ctx):
             args=content.split(" ")
               command=args[0][len(PREFIX):] #removes prefix
                   if(command == "remove"):
-                     with open("combinations.csv","w") as cominationsFile:
-                    combinationWriter=csv.writer(cominationsFile)
-                    for combination in combinationWriter #loop through
-                       if(combination[1]==args[1] and combination[2]==args[2]): 
-                            
-       else:
+                    filename="combinations.csv"
+                    temp_file=NamedTemporaryfile(delete=False)
+                    with open(filename,"rb" as csvfile,temp_file:
+                              reader=csv.DictReader(csvfile)
+                              writer=csv.DictWriter(temp_file)
+                   for row in reader:
+                              if(combination[1]==args[1] and combination[2]==args[2]):
+                               next(row) #skip line 
+                              else writer.writerow(row)
+                              
+                              
+            shutile.move(temp_file.name,filename) #move new file with deleted combination to combinations.csv file
+             return true                 
+           return false    
+                                     
+      else:
         msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
          await client.send_message(ctx.message.channel, msg)
+         return true
     
                         
 
