@@ -22,7 +22,10 @@ class CustomClient(discord.Client):
             f'{guild.name}(id: {guild.id})'
         )
     async def on_member_join(self,member):
-        pass#For later
+        #pass#For later
+        for channel in member.guild.channels:
+            if str(channel) == "general":
+                await channel.send(f'Welcome to the server {member.mention}!')
     async def on_message(self,message):
         content=message.content
         channel=message.channel
