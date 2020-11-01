@@ -14,6 +14,9 @@ PREFIX = "!" #TODO: Make this not hard-coded.
 
 
 class CustomClient(discord.Client):
+    combinations={}
+    #Key: tuple of 2 elements "(element1, element2)"
+    #Value: Product
     async def on_ready(self):
         print(f'{client.user} has connected to Discord!')
         guild = discord.utils.get(client.guilds, name=GUILD)
@@ -21,6 +24,13 @@ class CustomClient(discord.Client):
             f'{client.user} is connected to the following guild:\n'
             f'{guild.name}(id: {guild.id})'
         )
+    
+    async def on_connect(self):
+        print("on_connect")
+        with open("combinations.csv","r") as combinationsFile:
+            combinationsreader=csv.reader(combinationsFile)
+            for combination in combinationsreader:
+                self.combinations[(combination[1],combination[2])]=combination[0]
     async def on_member_join(self,member):
         #pass#For later
         for channel in member.guild.channels:
@@ -34,26 +44,21 @@ class CustomClient(discord.Client):
             command=args[0][len(PREFIX):]#remove the prefix from the command
             #print(args)
             if(command=="combine"):
-                with open("combinations.csv","r") as cominationsFile:
-                    combinationsreader=csv.reader(cominationsFile)
-                    for combination in combinationsreader:
-                        #print(combination)
-                        if(combination[1]==args[1] and combination[2]==args[2]):
-                            print("user "+str(message.author)+" successfully combined "+combination[1]+" with "+combination[2]+" to get "+combination[0])
-                            with open("userCombinations.txt", "a+") as userCombFile:
-                                userCombFile.seek(0)
-                                for element in userCombFile.readlines():
-                                    if element.strip("\n") == combination[0]:
-                                        await channel.send("Element already created.")
-                                        break
-                                else:
-                                    await channel.send(combination[1]+"+"+combination[2]+"="+combination[0])
-                                    userCombFile.write("{}\n".format(combination[0]))
-                            break
-                    else:
-                        print("user "+str(message.author)+" made an invalid combination")    
-                        await channel.send("Invalid combination")
-  
+                if((args[1],args[2]) in self.combinations):
+                    print("user "+str(message.author)+" successfully combined "+args[1]+" with "+args[2]+" to get "+self.combinations[(args[1],args[2])])
+                    await channel.send(args[1]+"+"+args[2]+"="+self.combinations[(args[1]),(args[2])])
+                    with open("userCombinations.txt", "a+") as userCombFile:
+                        userCombFile.seek(0)
+                        for element in userCombFile.readlines():
+                            if element.strip("\n") == self.combinations[(args[1]),(args[2])]:
+                                await channel.send("(You've already made this element.)")
+                                break
+                        else:
+                            userCombFile.write(self.combinations[(args[1]),(args[2])]+"\n")
+                else:
+                    print("user "+str(message.author)+" made an invalid combination")    
+                    await channel.send("Invalid combination")
+
 #check if code works 
 # async def ModRemoveItem(self,ctx):
      # if ctx.message.author.server_permissions.administrator:
