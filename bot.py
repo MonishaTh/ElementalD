@@ -86,7 +86,14 @@ class CustomClient(discord.Client):
         # msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
          # await client.send_message(ctx.message.channel, msg)
          # return true
-    
+   
+      #  async def hint(self, message):
+       #   content=message.content
+        #channel=message.channel
+        #if(content.startswith(PREFIX)):
+         #   args=content.split(" ")
+          #  command=args[0][len(PREFIX):]
+           # if(command=="hint"):
                         
 
 client = CustomClient()
