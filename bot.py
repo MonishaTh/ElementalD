@@ -3,7 +3,7 @@ import os, csv
 
 import shutil
 from tempfile import NamedTemporaryFile
-printf ("hello")
+
 import discord
 from dotenv import load_dotenv
 
