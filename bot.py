@@ -58,42 +58,41 @@ class CustomClient(discord.Client):
                 else:
                     print("user "+str(message.author)+" made an invalid combination")    
                     await channel.send("Invalid combination")
+            if(command=="remove"):
+                with open("admin.txt","r+") as adminFile:
+                    adminFile.seek(0)
+                    for element in adminFile.readlines():
+                        if element.strip("\n") == str(message.author):
+                            if((args[1],args[2]) in self.combinations):
+                                print("user "+str(message.author)+" successfully removed"+args[1]+" with "+args[2]+" to get "+self.combinations[(args[1],args[2])])
+                                await channel.send("sucessfully removed "+args[1]+"+"+args[2]+"="+self.combinations[(args[1]),(args[2])]+" from csv file")
+                                new=open('combinations.csv','r+')
+                                old=open('newCsv.csv','w+')
+                                reader=csv.reader(new)
+                                writer=csv.writer(old)
+                                for row in reader:
+                                    if ((row[0] !=self.combinations[(args[1],args[2])])):
+                                        writer.writerow(row)
+                                new.close()
+                                old.close()
+                                shutil.move('newCsv.csv','combinations.csv')
+            if(command=="hint"):
+                combFile=open('combinations.csv','r+')
+                userFile=open('userCombinations.txt','r+')
+                reader = csv.reader(combFile)
+                count=1
+                while(count >= 1):
+                    chosen_row = random.choice(list(reader))
+                    for element in userFile.readlines():
+                        if chosen_row[0] == element.strip("\n"):
+                            count=count+1
+                    if count == 1:
+                        count=-1
+                        print("user can try this combination"+chosen_row[1]+ " " + chosen_row[2])
+                        await channel.send("try this combination "+ chosen_row[1]+" " +chosen_row[2])
 
-#check if code works 
-# async def ModRemoveItem(self,ctx):
-     # if ctx.message.author.server_permissions.administrator:
-        # content=message.content
-        # if(content.startswith(PREFIX)):
-            # args=content.split(" ")
-            # command=args[0][len(PREFIX):] #removes prefix
-            # if(command == "remove"):
-                # filename="combinations.csv"
-                # temp_file=NamedTemporaryfile(delete=False)
-                # with open(filename,"rb") as csvfile, temp_file:
-                    # reader=csv.DictReader(csvfile)
-                    # writer=csv.DictWriter(temp_file)
-                    # for row in reader:
-                        # if(combination[1]==args[1] and combination[2]==args[2]):
-                            # next(row) #skip line 
-                        # else writer.writerow(row)
-                              
-                              
-            # shutile.move(temp_file.name,filename) #move new file with deleted combination to combinations.csv file
-             # return true                 
-           # return false    
-                                     
-      # else:
-        # msg = "You're  not a admin and dont have permission {0.author.mention}".format(ctx.message)  
-         # await client.send_message(ctx.message.channel, msg)
-         # return true
-   
-      #  async def hint(self, message):
-       #   content=message.content
-        #channel=message.channel
-        #if(content.startswith(PREFIX)):
-         #   args=content.split(" ")
-          #  command=args[0][len(PREFIX):]
-           # if(command=="hint"):
+
+
                       
 
 client = CustomClient()
