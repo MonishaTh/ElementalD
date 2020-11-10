@@ -12,6 +12,10 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 PREFIX = "!" #TODO: Make this not hard-coded.
 
+intents = discord.Intents.default()
+intents.members = True
+
+client = discord.Client(intents=intents)
 
 class CustomClient(discord.Client):
     combinations={}
@@ -24,18 +28,25 @@ class CustomClient(discord.Client):
             f'{client.user} is connected to the following guild:\n'
             f'{guild.name}(id: {guild.id})'
         )
-    
+        #members = '\n - '.join([member.name for member in guild.members])
+        #print(f'Guild Members:\n - {members}')
+        
+    async def on_member_join(self, member):
+        #print("New member joined.")
+        #channel = client.get_channel(762006658611937280)
+        #for channel in member.guild.channels:
+         #   if(channel.name == "general"):
+        #await channel.send(f"Welcome to the server {member.mention}!")
+        await member.create_dm()
+        await member.dm_channel.send(f'Welcome to my Discord Server {member.mention}!')
+        
     async def on_connect(self):
         print("on_connect")
         with open("combinations.csv","r") as combinationsFile:
             combinationsreader=csv.reader(combinationsFile)
             for combination in combinationsreader:
                 self.combinations[(combination[1],combination[2])]=combination[0]
-    async def on_member_join(self,member):
-        #pass#For later
-        for channel in member.guild.channels:
-            if str(channel) == "general":
-                await channel.send(f'Welcome to the server {member.mention}!')
+    
     async def on_message(self,message):
         content=message.content
         channel=message.channel
@@ -47,11 +58,11 @@ class CustomClient(discord.Client):
                 if((args[1],args[2]) in self.combinations):
                     print("user "+str(message.author)+" successfully combined "+args[1]+" with "+args[2]+" to get "+self.combinations[(args[1],args[2])])
                     await channel.send(args[1]+"+"+args[2]+"="+self.combinations[(args[1]),(args[2])])
-                    with open("userCombinations.txt", "a+") as userCombFile:
+                    with open(f"combinations_{message.author}.txt", "a+") as userCombFile:
                         userCombFile.seek(0)
                         for element in userCombFile.readlines():
                             if element.strip("\n") == self.combinations[(args[1]),(args[2])]:
-                                await channel.send("(You've already made this element.)")
+                                await channel.send("(You already created this element.)")
                                 break
                         else:
                             userCombFile.write(self.combinations[(args[1]),(args[2])]+"\n")
