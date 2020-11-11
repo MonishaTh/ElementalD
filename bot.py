@@ -69,7 +69,7 @@ class CustomClient(discord.Client):
                 else:
                     print("user "+str(message.author)+" made an invalid combination")    
                     await channel.send("Invalid combination")
-            if(command=="remove"):
+            elif(command=="remove"):
                 with open("admin.txt","r+") as adminFile:
                     adminFile.seek(0)
                     for element in adminFile.readlines():
@@ -87,7 +87,7 @@ class CustomClient(discord.Client):
                                 new.close()
                                 old.close()
                                 shutil.move('newCsv.csv','combinations.csv')
-            if(command=="hint"):
+            elif(command=="hint"):
                 combFile=open('combinations.csv','r+')
                 userFile=open('userCombinations.txt','r+')
                 reader = csv.reader(combFile)
@@ -101,6 +101,19 @@ class CustomClient(discord.Client):
                         count=-1
                         print("user can try this combination"+chosen_row[1]+ " " + chosen_row[2])
                         await channel.send("try this combination "+ chosen_row[1]+" " +chosen_row[2])
+            elif(command=="suggest"):
+                if(len(args)<4):
+                    await channel.send("Syntax: suggest element1 element2 product")
+                if((args[1],args[2]) in self.combinations):
+                    await channel.send("That combination already exists.")
+                else:
+                    self.combinations[(args[1],args[2])]=args[3]
+                    with open("combinations.csv","a") as outputFile:#"a" means "open for appending"
+                        combinationswriter=csv.writer(outputFile)
+                        combinationswriter.writerow((args[3],args[1],args[2]))
+                        await channel.send("Combination created! "+args[1]+" + "+args[2]+" = "+args[3])
+            else:
+                await channel.send("Unknown command.")
 
 
 
