@@ -1,5 +1,5 @@
 # bot.py
-import os, csv
+import os, csv, json
 
 import shutil
 from tempfile import NamedTemporaryFile
@@ -11,6 +11,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 PREFIX = "!" #TODO: Make this not hard-coded.
+THRESHOLD = 2 #the number of votes necessary to add a new element.
 
 intents = discord.Intents.default()
 intents.members = True
@@ -104,14 +105,58 @@ class CustomClient(discord.Client):
             elif(command=="suggest"):
                 if(len(args)<4):
                     await channel.send("Syntax: suggest element1 element2 product")
-                if((args[1],args[2]) in self.combinations):
+                elif((args[1],args[2]) in self.combinations):
                     await channel.send("That combination already exists.")
-                else:
+                else:                      
+                    with open("suggestions.json","r") as suggestionsFile:
+                        for line in suggestionsFile:
+                            cur_suggestion=json.loads(line)
+                            if(cur_suggestion["factors"]==[args[1],args[2]] and cur_suggestion["product"]==args[3]):
+                                await channel.send("Someone has already suggested that. Use !voteup to vote for it.")
+                                return
+                    suggestion = {
+                        "product":args[3],
+                        "factors":(args[1],args[2]),
+                        "upvotes":[str(message.author)],
+                        "downvotes":{}
+                    }
+                    with open("suggestions.json","a") as suggestionsFile:
+                        suggestionsFile.write(json.dumps(suggestion)+"\n")
+                    await channel.send("Succesfully suggested the combination "+args[1]+" + "+args[2]+" = "+args[3])
+            elif(command=="voteup"):
+                if(len(args)<4):
+                    await channel.send("Syntax: voteup element1 element2 product")
+                suggestions=[]
+                suggestion = {}
+                suggested=False
+                with open("suggestions.json","r") as suggestionsFile:
+                    for line in suggestionsFile:
+                        cur_suggestion=json.loads(line)
+                        if(not(suggested) and cur_suggestion["factors"]==[args[1],args[2]] and cur_suggestion["product"]==args[3]):
+                            if(str(message.author) not in cur_suggestion["upvotes"]):
+                                cur_suggestion["upvotes"].append(str(message.author))
+                                suggestion=cur_suggestion
+                            else:
+                                await channel.send("You've already voted for this.")
+                                return
+                            suggested=True
+                        else:
+                            suggestions.append(cur_suggestion)
+                if(not(suggested)):
+                    await channel.send("Nobody has suggested that combination. Perhaps you made a typo, or you meant to use the \"suggest\" command.")
+                    return
+                await channel.send("Succesfully upvoted. Currently there are "+str(len(suggestion["upvotes"]))+" upvotes, out of a necessary "+str(THRESHOLD)+" to get added.")
+                if(len(suggestion["upvotes"])>=THRESHOLD):
                     self.combinations[(args[1],args[2])]=args[3]
                     with open("combinations.csv","a") as outputFile:#"a" means "open for appending"
                         combinationswriter=csv.writer(outputFile)
                         combinationswriter.writerow((args[3],args[1],args[2]))
-                        await channel.send("Combination created! "+args[1]+" + "+args[2]+" = "+args[3])
+                        await channel.send("Combination created! "+args[1]+" + "+args[2]+" = "+args[3])                
+                else:
+                    suggestions.insert(0,suggestion)#insert in front because newer suggestions are more likely to get more votes sooner.
+                with open("suggestions.json","w") as suggestionsFile:
+                    for suggestion in suggestions:
+                        suggestionsFile.write(json.dumps(suggestion)+"\n")
             else:
                 await channel.send("Unknown command.")
 
