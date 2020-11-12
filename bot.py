@@ -157,6 +157,33 @@ class CustomClient(discord.Client):
                 with open("suggestions.json","w") as suggestionsFile:
                     for suggestion in suggestions:
                         suggestionsFile.write(json.dumps(suggestion)+"\n")
+            elif(command=="upcoming"):
+                
+                total=65535#how many suggestions the user wants to see
+                if(len(args)>1):
+                    try:
+                        total=int(args[1])
+                    except Exception:
+                        await channel.send("Syntax: upcoming [number]")
+                count=total
+                with open("suggestions.json","r") as suggestionsFile:
+                    for line in suggestionsFile:
+                        suggestion = json.loads(line)
+                        if(len(suggestion["upvotes"])>=THRESHOLD/2):
+                            await channel.send("Upcoming suggestion: "+suggestion["factors"][0]+" + "+suggestion["factors"][1]+" = "+suggestion["product"])
+                            count-=1
+                            if(count <= 0):
+                                return
+                if(total==count):
+                    with open("suggestions.json","r") as suggestionsFile:
+                        for line in suggestionsFile:
+                            suggestion = json.loads(line)
+                            await channel.send("Upcoming suggestion: "+suggestion["factors"][0]+" + "+suggestion["factors"][1]+" = "+suggestion["product"])
+                            count-=1
+                            if(count <= 0):
+                                return
+                if(total==count):
+                    await channel.send("No upcoming suggestions")
             else:
                 await channel.send("Unknown command.")
 
