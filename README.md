@@ -1,4 +1,8 @@
 # ElementalD
+
+Team number: 009 Section 004
+
+
 To use this bot, you'll need to create a virtual environment and install some modules. To do this (linux) use the following commands:
  virtualenv ElementalD-env
  source ElementalD-env/bin/activate
