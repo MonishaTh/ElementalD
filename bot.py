@@ -89,7 +89,7 @@ class CustomClient(discord.Client):
                                 shutil.move('newCsv.csv','combinations.csv')
             elif(command=="hint"):
                 combFile=open('combinations.csv','r+')
-                userFile=open('userCombinations.txt','r+')
+                userFile=open(f"combinations_{message.author}.txt",'r+')
                 reader = csv.reader(combFile)
                 count=1
                 while(count >= 1):
