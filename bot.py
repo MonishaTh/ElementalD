@@ -1,5 +1,6 @@
 # bot.py
 import os, csv, json
+import random
 
 import shutil
 from tempfile import NamedTemporaryFile
