@@ -32,8 +32,11 @@ async def voteupTest(interface):
     await interface.assert_reply_contains("!voteup valid valid validComb", "You've already voted for this.") #change args according to suggestTest
     await interface.assert_reply_contains("!voteup fire earth Lava", "Nobody has suggested that combination. Perhaps you made a typo, or you meant to use the \"suggest\" command.")
 
-
-
+@test_collector()
+async def hintTest(interface):
+    response=await interface.wait_for_reply("!hint")
+    responseWords=response.content.split()[-2:]
+    await interface.assert_reply_contains("!combine "+" ".join(responseWords),"+".join(responseWords))
 
 
 

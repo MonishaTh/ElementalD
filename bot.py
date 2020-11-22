@@ -100,7 +100,7 @@ class CustomClient(discord.Client):
                     if count == 1:
                         count=-1
                         print("user can try this combination"+chosen_row[1]+ " " + chosen_row[2])
-                        await channel.send("try this combination "+ chosen_row[1]+" " +chosen_row[2])
+                        await channel.send("try this combination: "+ chosen_row[1]+" " +chosen_row[2])
             elif(command=="suggest"):
                 if(len(args)<4):
                     await channel.send("Syntax: suggest element1 element2 product")
