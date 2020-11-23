@@ -37,8 +37,9 @@ async def hintTest(interface):
     response=await interface.wait_for_reply("!hint")
     responseWords=response.content.split()[-2:]
     await interface.assert_reply_contains("!combine "+" ".join(responseWords),"+".join(responseWords))
+
 @test_collector()
-async def combineTest(interface):
+async def removeTest(interface):
     await interface.assert_reply_contains("!remove air earth", "sucessfully removed air+earth=Dust from csv file") #change args everytime
 
 
