@@ -9,14 +9,14 @@ created_channel = None
 
 @test_collector()
 async def combineTest(interface):
-    await interface.assert_reply_contains("!combine air fire", "air+fire=Energy") #change args everytime
+    await interface.assert_reply_contains("!combine earth rain", "earth+rain=Plant") #change args everytime
     await interface.assert_reply_contains("!combine zzzzz, zzzzz", "Invalid combination")
     
 @test_collector()
 async def suggestTest(interface):
     await interface.assert_reply_contains("!suggest fire earth Lava", "That combination already exists.")
     #await interface.assert_reply_contains("!suggest plant earth yard", "Someone has already suggested that. Use !voteup to vote for it.") #change args everytime
-    await interface.assert_reply_contains("!suggest valid valid validComb", "Succesfully suggested the combination valid + valid = validComb") #change args everytime
+    await interface.assert_reply_contains("!suggest invalid valid noComb", "Succesfully suggested the combination invalid + valid = noComb") #change args everytime
     
 #@test_collector()
 #async def collectionTest(interface):
@@ -29,7 +29,7 @@ async def unknownCmdTest(interface):
 @test_collector()
 async def voteupTest(interface):
     await interface.assert_reply_contains("!voteup", "Syntax: voteup element1 element2 product")
-    await interface.assert_reply_contains("!voteup valid valid validComb", "You've already voted for this.") #change args according to suggestTest
+    await interface.assert_reply_contains("!voteup invalid valid noComb", "You've already voted for this.") #change args according to suggestTest
     await interface.assert_reply_contains("!voteup fire earth Lava", "Nobody has suggested that combination. Perhaps you made a typo, or you meant to use the \"suggest\" command.")
 
 @test_collector()
@@ -40,7 +40,7 @@ async def hintTest(interface):
 
 @test_collector()
 async def removeTest(interface):
-    await interface.assert_reply_contains("!remove air earth", "sucessfully removed air+earth=Dust from csv file") #change args everytime
+    await interface.assert_reply_contains("!remove air fire", "sucessfully removed air+earth=Energy from csv file") #change args everytime
 
 
 
